@@ -11,7 +11,7 @@ import Observation
 struct FeedView: View {
     @Environment(AppState.self) private var appState
     @Environment(FeedViewModel.self) private var viewModel
-
+    
     var body: some View {
         VStack {
             HStack {
@@ -34,7 +34,10 @@ struct FeedView: View {
                 }
             }
             .listStyle(.plain)
-            .navigationTitle("Feed")
+        }
+        .navigationTitle("Feed")
+        .navigationDestination(for: String.self) { symbol in
+            SymbolDetailView(symbol: symbol)
         }
     }
 }
@@ -43,7 +46,10 @@ struct FeedView: View {
     let appState = AppState()
     let ws: WebSocketServiceType = WebSocketService()
     let vm = FeedViewModel(appState: appState, webSocket: ws)
-    FeedView()
-        .environment(appState)
-        .environment(vm)
+    
+    NavigationStack {
+        FeedView()
+            .environment(appState)
+            .environment(vm)
+    }
 }
