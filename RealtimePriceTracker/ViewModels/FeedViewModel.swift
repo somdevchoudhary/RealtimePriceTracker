@@ -72,7 +72,6 @@ final class FeedViewModel: ObservableObject {
             }
     }
     
-    
     private func stopFeed() {
         appState.isRunning = false
         appState.isConnected = false

@@ -9,31 +9,47 @@ import SwiftUI
 
 struct StockRowView: View {
     let stock: StockSymbol
-
+    
+    private var formattedPrice: String {
+        String(format: "%.2f", stock.price)
+    }
+    
+    private var changeSymbol: String? {
+        guard let previous = stock.previousPrice else { return nil }
+        let diff = stock.price - previous
+        return diff == 0 ? nil : (diff > 0 ? "↑" : "↓")
+    }
+    
+    private var changeColor: Color {
+        guard let previous = stock.previousPrice else { return .clear }
+        let diff = stock.price - previous
+        return diff >= 0 ? .green : .red
+    }
+    
     var body: some View {
         HStack {
             Text(stock.symbol)
                 .font(.headline)
                 .foregroundStyle(.primary)
-
+            
             Spacer()
-
-            Text(String(format: "%.2f", stock.price))
-                .bold()
+            
+            Text(formattedPrice)
+                .fontWeight(.bold)
                 .foregroundStyle(.primary)
-
-            if let previous = stock.previousPrice {
-                let diff = stock.price - previous
-                Text(diff >= 0 ? "↑" : "↓")
-                    .foregroundColor(diff >= 0 ? .green : .red)
+            
+            if let symbol = changeSymbol {
+                Text(symbol)
+                    .foregroundStyle(changeColor)
             }
         }
         .padding(.vertical, 4)
+        .contentShape(Rectangle())
     }
 }
 
+
 #Preview {
     StockRowView(stock: StockSymbol(symbol: "AAPL", price: 123.45, previousPrice: 120.00))
-        .previewLayout(.sizeThatFits)
         .padding()
 }

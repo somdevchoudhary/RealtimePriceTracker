@@ -15,40 +15,54 @@ struct SymbolDetailView: View {
         appState.symbols.first(where: { $0.symbol == symbol })
     }
     
+    private var formattedPrice: String {
+        guard let price = stock?.price else { return "—" }
+        return price.formatted(.number.precision(.fractionLength(2)))
+    }
+    
+    private var priceChange: (text: String, color: Color)? {
+        guard let stock, let previous = stock.previousPrice else { return nil }
+        let diff = stock.price - previous
+        let isUp = diff >= 0
+        
+        return (
+            text: isUp ? "↑ Increased" : "↓ Decreased",
+            color: isUp ? .green : .red
+        )
+    }
+    
     var body: some View {
-        Group {
-            if let stock = stock {
-                VStack(spacing: 20) {
-                    Text(stock.symbol)
-                        .font(.largeTitle)
-                        .bold()
-                        .foregroundStyle(.primary)
-                    
-                    Text(String(format: "%.2f", stock.price))
-                        .font(.system(size: 40, weight: .bold))
-                        .foregroundStyle(.primary)
-                    
-                    if let previous = stock.previousPrice {
-                        let diff = stock.price - previous
-                        Text(diff >= 0 ? "↑ Increased" : "↓ Decreased")
-                            .foregroundColor(diff >= 0 ? .green : .red)
-                    }
-                    
-                    Text("This is a sample description for \(stock.symbol). You could load more detailed information about the company here.")
-                        .font(.body)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                        .foregroundStyle(.primary)
-                    Spacer()
+        VStack(spacing: 20) {
+            if let stock {
+                Text(stock.symbol)
+                    .font(.largeTitle.bold())
+                    .foregroundStyle(.primary)
+                    .padding(.top, 40)
+                Text(formattedPrice)
+                    .font(.system(size: 40, weight: .bold))
+                    .foregroundStyle(.primary)
+                
+                if let change = priceChange {
+                    Text(change.text)
+                        .foregroundStyle(change.color)
                 }
+                
+                Text("This is a sample description for \(stock.symbol). You could load more detailed information about the company here.")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                
+                Spacer()
             } else {
                 Text("Symbol not found.")
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(.secondary)
+                Spacer()
             }
         }
         .padding()
         .navigationTitle(symbol)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -57,6 +71,7 @@ struct SymbolDetailView: View {
     appState.symbols = [
         StockSymbol(symbol: "AAPL", price: 123.45, previousPrice: 120.0)
     ]
+    
     return NavigationStack {
         SymbolDetailView(symbol: "AAPL")
             .environmentObject(appState)

@@ -14,20 +14,7 @@ struct FeedView: View {
     
     var body: some View {
         VStack {
-            HStack {
-                Circle()
-                    .fill(appState.isConnected ? Color.green : Color.red)
-                    .frame(width: 12, height: 12)
-                Text(appState.isConnected ? "Connected" : "Disconnected")
-                    .font(.caption)
-                Spacer()
-                Button(appState.isRunning ? "Stop" : "Start") {
-                    viewModel.toggleFeed()
-                }
-                .buttonStyle(.borderedProminent)
-            }
-            .padding([.horizontal, .top])
-            
+            header
             List(viewModel.sortedSymbols) { stock in
                 NavigationLink(value: stock.symbol) {
                     StockRowView(stock: stock)
@@ -36,9 +23,26 @@ struct FeedView: View {
             .listStyle(.plain)
         }
         .navigationTitle("Feed")
+        .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(for: String.self) { symbol in
             SymbolDetailView(symbol: symbol)
         }
+    }
+    
+    private var header: some View {
+        HStack {
+            Circle()
+                .fill(appState.isConnected ? Color.green : Color.red)
+                .frame(width: 12, height: 12)
+            Text(appState.isConnected ? "Connected" : "Disconnected")
+                .font(.caption)
+            Spacer()
+            Button(appState.isRunning ? "Stop" : "Start") {
+                viewModel.toggleFeed()
+            }
+            .buttonStyle(.borderedProminent)
+        }
+        .padding([.horizontal, .top])
     }
 }
 
