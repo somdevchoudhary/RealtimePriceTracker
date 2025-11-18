@@ -14,11 +14,13 @@ struct StockRowView: View {
         HStack {
             Text(stock.symbol)
                 .font(.headline)
+                .foregroundStyle(.primary)
 
             Spacer()
 
             Text(String(format: "%.2f", stock.price))
                 .bold()
+                .foregroundStyle(.primary)
 
             if let previous = stock.previousPrice {
                 let diff = stock.price - previous

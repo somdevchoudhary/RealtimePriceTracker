@@ -9,8 +9,8 @@ import SwiftUI
 import Observation
 
 struct FeedView: View {
-    @Environment(AppState.self) private var appState
-    @Environment(FeedViewModel.self) private var viewModel
+    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var viewModel: FeedViewModel
     
     var body: some View {
         VStack {
@@ -49,7 +49,7 @@ struct FeedView: View {
     
     NavigationStack {
         FeedView()
-            .environment(appState)
-            .environment(vm)
+            .environmentObject(appState)
+            .environmentObject(vm)
     }
 }

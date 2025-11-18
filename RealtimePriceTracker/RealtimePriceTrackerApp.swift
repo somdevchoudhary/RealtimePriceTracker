@@ -6,13 +6,13 @@
 //
 
 import SwiftUI
-import Observation
 
 @main
 struct RealtimePriceTrackerApp: App {
-    @State var appState: AppState
-    @State private var feedViewModel: FeedViewModel
-    
+    @StateObject var appState: AppState
+    @StateObject private var feedViewModel: FeedViewModel
+    @State private var path = NavigationPath()
+
     init() {
         let appState = AppState()
         let webSocket: WebSocketServiceType = WebSocketService()
@@ -20,17 +20,33 @@ struct RealtimePriceTrackerApp: App {
             appState: appState,
             webSocket: webSocket
         )
-        _appState = State(initialValue: appState)
-        _feedViewModel = State(initialValue: feedViewModel)
+        _appState = StateObject(wrappedValue: appState)
+        _feedViewModel = StateObject(wrappedValue: feedViewModel)
     }
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
+            NavigationStack(path: $path) {
                 FeedView()
             }
-            .environment(appState)
-            .environment(feedViewModel)
+            .environmentObject(appState)
+            .environmentObject(feedViewModel)
+            .onOpenURL { url in
+                handleDeeplink(url)
+            }
         }
+    }
+    
+    private func handleDeeplink(_ url: URL) {
+        guard url.scheme == "stocks",
+              url.host == "symbol" else { return }
+        let symbol = url.lastPathComponent.uppercased()
+        if !appState.symbols.contains(where: { $0.symbol == symbol }) {
+            appState.symbols.append(
+                StockSymbol(symbol: symbol, price: 0, previousPrice: nil)
+            )
+        }
+        path = NavigationPath()
+        path.append(symbol)
     }
 }

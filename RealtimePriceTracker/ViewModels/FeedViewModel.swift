@@ -7,11 +7,9 @@
 
 import Foundation
 import Combine
-import Observation
 
-@Observable
-final class FeedViewModel {
-    var sortedSymbols: [StockSymbol] = []
+final class FeedViewModel: ObservableObject {
+    @Published var sortedSymbols: [StockSymbol] = []
     
     private let appState: AppState
     private let webSocket: WebSocketServiceType

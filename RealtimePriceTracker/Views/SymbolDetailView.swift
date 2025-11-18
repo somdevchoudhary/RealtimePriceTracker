@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SymbolDetailView: View {
-    @Environment(AppState.self) private var appState
+    @EnvironmentObject var appState: AppState
     let symbol: String
     
     private var stock: StockSymbol? {
@@ -22,9 +22,11 @@ struct SymbolDetailView: View {
                     Text(stock.symbol)
                         .font(.largeTitle)
                         .bold()
+                        .foregroundStyle(.primary)
                     
                     Text(String(format: "%.2f", stock.price))
                         .font(.system(size: 40, weight: .bold))
+                        .foregroundStyle(.primary)
                     
                     if let previous = stock.previousPrice {
                         let diff = stock.price - previous
@@ -37,11 +39,12 @@ struct SymbolDetailView: View {
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
-                    
+                        .foregroundStyle(.primary)
                     Spacer()
                 }
             } else {
                 Text("Symbol not found.")
+                    .foregroundStyle(.primary)
             }
         }
         .padding()
@@ -56,6 +59,6 @@ struct SymbolDetailView: View {
     ]
     return NavigationStack {
         SymbolDetailView(symbol: "AAPL")
-            .environment(appState)
+            .environmentObject(appState)
     }
 }

@@ -6,11 +6,10 @@
 //
 
 import Foundation
-import Observation
+import Combine
 
-@Observable
-final class AppState {
-    var symbols: [StockSymbol] = []
-    var isRunning: Bool = false
-    var isConnected: Bool = false
+final class AppState: ObservableObject {
+    @Published var symbols: [StockSymbol] = []
+    @Published var isRunning: Bool = false
+    @Published var isConnected: Bool = false
 }
