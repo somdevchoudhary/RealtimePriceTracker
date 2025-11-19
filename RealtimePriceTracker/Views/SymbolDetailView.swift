@@ -15,39 +15,37 @@ struct SymbolDetailView: View {
         appState.symbols.first(where: { $0.symbol == symbol })
     }
     
-    private var formattedPrice: String {
-        guard let price = stock?.price else { return "—" }
-        return price.formatted(.number.precision(.fractionLength(2)))
+    private var presentation: StockPresentation? {
+        stock.map { StockPresentation(stock: $0) }
     }
     
-    private var priceChange: (text: String, color: Color)? {
-        guard let stock, let previous = stock.previousPrice else { return nil }
-        let diff = stock.price - previous
-        let isUp = diff >= 0
-        
-        return (
-            text: isUp ? "↑ Increased" : "↓ Decreased",
-            color: isUp ? .green : .red
-        )
+    private func color(for direction: PriceChangeDirection) -> Color {
+        switch direction {
+        case .up:   return .green
+        case .down: return .red
+        case .flat: return .primary
+        case .none: return .secondary
+        }
     }
     
     var body: some View {
         VStack(spacing: 20) {
-            if let stock {
-                Text(stock.symbol)
+            if let presentation {
+                Text(presentation.symbol)
                     .font(.largeTitle.bold())
                     .foregroundStyle(.primary)
                     .padding(.top, 40)
-                Text(formattedPrice)
+                
+                Text(presentation.priceText)
                     .font(.system(size: 40, weight: .bold))
                     .foregroundStyle(.primary)
                 
-                if let change = priceChange {
-                    Text(change.text)
-                        .foregroundStyle(change.color)
+                if let changeText = presentation.changeText {
+                    Text(changeText)
+                        .foregroundStyle(color(for: presentation.direction))
                 }
                 
-                Text("This is a sample description for \(stock.symbol). You could load more detailed information about the company here.")
+                Text("This is a sample description for \(presentation.symbol). You could load more detailed information about the company here.")
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)

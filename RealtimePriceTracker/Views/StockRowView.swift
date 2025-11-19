@@ -10,37 +10,33 @@ import SwiftUI
 struct StockRowView: View {
     let stock: StockSymbol
     
-    private var formattedPrice: String {
-        String(format: "%.2f", stock.price)
+    private var presentation: StockPresentation {
+        StockPresentation(stock: stock)
     }
     
-    private var changeSymbol: String? {
-        guard let previous = stock.previousPrice else { return nil }
-        let diff = stock.price - previous
-        return diff == 0 ? nil : (diff > 0 ? "↑" : "↓")
-    }
-    
-    private var changeColor: Color {
-        guard let previous = stock.previousPrice else { return .clear }
-        let diff = stock.price - previous
-        return diff >= 0 ? .green : .red
+    private func color(for direction: PriceChangeDirection) -> Color {
+        switch direction {
+        case .up:   return .green
+        case .down: return .red
+        case .flat, .none: return .clear
+        }
     }
     
     var body: some View {
         HStack {
-            Text(stock.symbol)
+            Text(presentation.symbol)
                 .font(.headline)
                 .foregroundStyle(.primary)
             
             Spacer()
             
-            Text(formattedPrice)
+            Text(presentation.priceText)
                 .fontWeight(.bold)
                 .foregroundStyle(.primary)
             
-            if let symbol = changeSymbol {
+            if let symbol = presentation.changeSymbol {
                 Text(symbol)
-                    .foregroundStyle(changeColor)
+                    .foregroundStyle(color(for: presentation.direction))
             }
         }
         .padding(.vertical, 4)
@@ -48,8 +44,9 @@ struct StockRowView: View {
     }
 }
 
-
 #Preview {
-    StockRowView(stock: StockSymbol(symbol: "AAPL", price: 123.45, previousPrice: 120.00))
-        .padding()
+    StockRowView(
+        stock: StockSymbol(symbol: "AAPL", price: 123.45, previousPrice: 120.00)
+    )
+    .padding()
 }
