@@ -40,6 +40,9 @@ The app uses a **single WebSocket connection**, **real-time data updates**
   - Price direction  
   - Symbol description  
   - Real-time binding using shared state
+  
+### Deeplink
+- Redirecting to symbol detail screen (For ex: stocks://symbol/AAPL)
 
 ---
 
