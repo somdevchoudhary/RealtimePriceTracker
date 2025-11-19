@@ -12,7 +12,8 @@ struct RealtimePriceTrackerApp: App {
     @StateObject var appState: AppState
     @StateObject private var feedViewModel: FeedViewModel
     @State private var path = NavigationPath()
-
+    @State private var showSplash = true
+    
     init() {
         let appState = AppState()
         let webSocket: WebSocketServiceType = WebSocketService()
@@ -23,16 +24,36 @@ struct RealtimePriceTrackerApp: App {
         _appState = StateObject(wrappedValue: appState)
         _feedViewModel = StateObject(wrappedValue: feedViewModel)
     }
-
+    
     var body: some Scene {
         WindowGroup {
-            NavigationStack(path: $path) {
-                FeedView()
+            ZStack {
+                NavigationStack(path: $path) {
+                    FeedView()
+                }
+                .environmentObject(appState)
+                .environmentObject(feedViewModel)
+                .onOpenURL { url in
+                    handleDeeplink(url)
+                }
+                if showSplash {
+                    SplashView()
+                        .transition(.opacity)
+                        .zIndex(1)
+                }
             }
-            .environmentObject(appState)
-            .environmentObject(feedViewModel)
-            .onOpenURL { url in
-                handleDeeplink(url)
+            .onAppear {
+                scheduleSplashHide()
+            }
+        }
+    }
+    
+    /// Schedule Splash Hide
+    private func scheduleSplashHide() {
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(1.5))
+            withAnimation(.easeOut(duration: 0.4)) {
+                showSplash = false
             }
         }
     }
