@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// PriceUpdate
 struct PriceUpdate: Codable, Equatable {
     let symbol: String
     let price: Double

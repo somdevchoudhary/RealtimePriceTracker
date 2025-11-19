@@ -37,6 +37,8 @@ struct RealtimePriceTrackerApp: App {
         }
     }
     
+    /// Handle Deeplink
+    /// - Parameter url: url
     private func handleDeeplink(_ url: URL) {
         guard url.scheme == "stocks",
               url.host == "symbol" else { return }

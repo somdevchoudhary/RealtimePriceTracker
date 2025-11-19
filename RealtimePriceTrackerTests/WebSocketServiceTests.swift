@@ -9,6 +9,7 @@ import XCTest
 import Combine
 @testable import RealtimePriceTracker
 
+/// WebSocketServiceTests
 final class WebSocketServiceTests: XCTestCase {
     private var cancellables = Set<AnyCancellable>()
 }
@@ -21,7 +22,6 @@ private extension WebSocketServiceTests {
         symbol: String = "AAPL",
         price: Double = 123.45
     ) -> PriceUpdate {
-        // If your struct has more fields, update this accordingly.
         PriceUpdate(symbol: symbol, price: price)
     }
 }

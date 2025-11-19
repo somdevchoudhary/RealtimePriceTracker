@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// StockRowView
 struct StockRowView: View {
     let stock: StockSymbol
     

@@ -9,6 +9,7 @@ import XCTest
 import Combine
 @testable import RealtimePriceTracker
 
+/// FeedViewModelTests
 final class FeedViewModelTests: XCTestCase {
 
     private var appState: AppState!

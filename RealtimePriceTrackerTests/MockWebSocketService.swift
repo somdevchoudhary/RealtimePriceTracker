@@ -9,6 +9,7 @@ import Foundation
 import Combine
 @testable import RealtimePriceTracker
 
+/// MockWebSocketService
 final class MockWebSocketService: WebSocketServiceType {
 
     // Subject we control from tests

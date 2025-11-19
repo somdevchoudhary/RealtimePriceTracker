@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// SymbolDetailView
 struct SymbolDetailView: View {
     @EnvironmentObject var appState: AppState
     let symbol: String

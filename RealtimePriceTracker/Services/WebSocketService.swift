@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+/// WebSocketServiceType
 protocol WebSocketServiceType {
     var messages: AnyPublisher<PriceUpdate, Never> { get }
     func connect()
@@ -16,6 +17,7 @@ protocol WebSocketServiceType {
     var isConnected: Bool { get }
 }
 
+/// WebSocketService
 final class WebSocketService: WebSocketServiceType {
     
     // MARK: - Public stream
@@ -52,9 +54,8 @@ final class WebSocketService: WebSocketServiceType {
         self.url = url
         self.session = session
     }
-    
-    // MARK: - WebSocketServiceType
-    
+        
+    // MARK: Connect
     func connect() {
         // Avoid opening multiple sockets
         guard webSocketTask == nil, let url = url else { return }
@@ -69,6 +70,7 @@ final class WebSocketService: WebSocketServiceType {
         }
     }
     
+    // MARK: Disconnect
     func disconnect() {
         // Stop receive loop
         listenTask?.cancel()

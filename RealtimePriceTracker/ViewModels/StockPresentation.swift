@@ -35,17 +35,17 @@ struct StockPresentation {
         let diff = stock.price - previous
         
         if diff == 0 {
+            direction = .flat
             changeSymbol = nil
             changeText = nil
-            direction = .flat
         } else if diff > 0 {
+            direction = .up
             changeSymbol = "↑"
             changeText = "↑ Increased"
-            direction = .up
         } else {
+            direction = .down
             changeSymbol = "↓"
             changeText = "↓ Decreased"
-            direction = .down
         }
     }
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 import Observation
 
+/// FeedView
 struct FeedView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var viewModel: FeedViewModel

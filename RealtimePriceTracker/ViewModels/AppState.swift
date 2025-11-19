@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+/// AppState
 final class AppState: ObservableObject {
     @Published var symbols: [StockSymbol] = []
     @Published var isRunning: Bool = false

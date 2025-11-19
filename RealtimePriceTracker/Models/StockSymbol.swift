@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// StockSymbol
 struct StockSymbol: Identifiable, Hashable {
     let id = UUID()
     let symbol: String
